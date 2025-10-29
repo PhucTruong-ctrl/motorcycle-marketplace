@@ -16,22 +16,22 @@ const Transaction = () => {
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 6 }, (_, i) => {
+  const currentYear = new Date().getFullYear(); // Get the current year
+  const years = Array.from({ length: 6 }, (_, i) => { // Create an array of years
     const year = currentYear - i;
     return { value: year, label: year.toString() };
   });
-  const [selectedYear, setSelectedYear] = useState(years[0].value);
+  const [selectedYear, setSelectedYear] = useState(years[0].value); // Set the default selected year
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState({ // State for filters
     sortBy: "Newest",
     type: "All",
     status: "All",
   });
 
-  const filterOptions = {
+  const filterOptions = { // Filter options for sorting and filtering
     sortBy: [
       { value: "Newest", label: "Newest First" },
       { value: "Oldest", label: "Oldest First" },
@@ -50,30 +50,30 @@ const Transaction = () => {
     ],
   };
 
-  const filteredTransactions = transactions
+  const filteredTransactions = transactions // Filter transactions based on search term and selected filters
     .filter((transaction) => {
       if (searchTerm) {
-        const searchLower = searchTerm.toLowerCase();
-        const matchesBrand = transaction.motorcycle?.brand
+        const searchLower = searchTerm.toLowerCase(); // Convert search term to lowercase
+        const matchesBrand = transaction.motorcycle?.brand // Check if motorcycle brand matches search term
+          ?.toLowerCase()
+          .includes(searchLower); // Check if motorcycle model matches search term
+        const matchesModel = transaction.motorcycle?.model // Check if motorcycle model matches search term
           ?.toLowerCase()
           .includes(searchLower);
-        const matchesModel = transaction.motorcycle?.model
-          ?.toLowerCase()
-          .includes(searchLower);
-        const matchesId = transaction.id_moto?.toString().includes(searchTerm);
+        const matchesId = transaction.id_moto?.toString().includes(searchTerm); // Check if transaction ID matches search term
 
-        if (!matchesBrand && !matchesModel && !matchesId) {
+        if (!matchesBrand && !matchesModel && !matchesId) { // If none match, return false
           return false;
         }
       }
 
-      if (filters.type !== "All" && transaction.type !== filters.type) {
+      if (filters.type !== "All" && transaction.type !== filters.type) { // Filter by type
         return false;
       }
 
-      if (filters.status !== "All") {
+      if (filters.status !== "All") { // Filter by status
         const statusMatch =
-          filters.status === "Completed"
+          filters.status === "Completed" // Check if status is completed
             ? transaction.completed
             : !transaction.completed;
         if (!statusMatch) return false;
@@ -81,8 +81,8 @@ const Transaction = () => {
 
       return true;
     })
-    .sort((a, b) => {
-      switch (filters.sortBy) {
+    .sort((a, b) => { // Sort transactions based on selected sort option
+      switch (filters.sortBy) { // Sort by selected option
         case "Newest":
           return new Date(b.created_at) - new Date(a.created_at);
         case "Oldest":
@@ -96,23 +96,23 @@ const Transaction = () => {
       }
     });
 
-  const handleFilterChange = (filterName, value) => {
+  const handleFilterChange = (filterName, value) => { // Handle filter changes
     setFilters((prev) => ({
       ...prev,
       [filterName]: value,
     }));
   };
 
-  const hasSellerTransactions = transactions.some(
-    (transaction) =>
+  const hasSellerTransactions = transactions.some( // Check if there are any transactions for the current user
+    (transaction) => // Check if the transaction is completed
       transaction.uid_seller === currentUser?.id &&
       new Date(transaction.created_at).getFullYear() === selectedYear &&
       transaction.completed
   );
 
-  const handleSold = async (id, motoId) => {
+  const handleSold = async (id, motoId) => { // Handle marking a transaction as sold
     try {
-      const { data: transactionData, error: transactionError } = await supabase
+      const { data: transactionData, error: transactionError } = await supabase // Fetch transaction data
         .from("TRANSACTION")
         .select("*")
         .eq("id", id)
@@ -120,23 +120,23 @@ const Transaction = () => {
 
       if (transactionError) throw transactionError;
 
-      const sellerId = transactionData.uid_seller;
+      const sellerId = transactionData.uid_seller; // Get the seller ID
 
-      const { error: updateTransactionError } = await supabase
+      const { error: updateTransactionError } = await supabase // Update the transaction to mark it as completed
         .from("TRANSACTION")
         .update({ completed: true })
         .eq("id", id);
 
       if (updateTransactionError) throw updateTransactionError;
 
-      const { error: motoError } = await supabase
+      const { error: motoError } = await supabase // Update the motorcycle to mark it as sold
         .from("MOTORCYCLE")
         .update({ is_sold: true })
         .eq("id", motoId);
 
       if (motoError) throw motoError;
 
-      const { data: sellerData, error: sellerError } = await supabase
+      const { data: sellerData, error: sellerError } = await supabase // Fetch the seller's sold list
         .from("USER")
         .select("sold_list")
         .eq("uid", sellerId)
@@ -144,7 +144,7 @@ const Transaction = () => {
 
       if (sellerError) throw sellerError;
 
-      const updatedSellerSoldList = sellerData.sold_list
+      const updatedSellerSoldList = sellerData.sold_list // Update the seller's sold list
         ? [...sellerData.sold_list, motoId]
         : [motoId];
 
@@ -158,7 +158,7 @@ const Transaction = () => {
     }
   };
 
-  const handleChat = (transaction) => {
+  const handleChat = (transaction) => { // Handle opening the chat with the other user
     if (!transaction || !currentUser) return;
 
     const receiver =
@@ -171,7 +171,7 @@ const Transaction = () => {
     }
   };
 
-  const handleCancel = async (transaction) => {
+  const handleCancel = async (transaction) => { // Handle cancelling a transaction
     if (!transaction || !currentUser) return;
 
     try {
@@ -187,7 +187,7 @@ const Transaction = () => {
 
       if (transactionError) throw transactionError;
 
-      setTransactions((prev) => prev.filter((t) => t.id !== transaction.id));
+      setTransactions((prev) => prev.filter((t) => t.id !== transaction.id)); // Remove the cancelled transaction from the state
 
       alert("Transaction cancelled successfully");
     } catch (error) {
@@ -196,20 +196,20 @@ const Transaction = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
+  useEffect(() => { // Fetch transactions when the component mounts or when currentUser changes
+    const fetchTransactions = async () => { // Fetch transactions from the database
       if (!currentUser) return;
 
       setLoading(true);
       try {
-        const { data, error } = await supabase
+        const { data, error } = await supabase // Fetch transactions for the current user
           .from("TRANSACTION")
           .select("*")
           .or(`uid_buyer.eq.${currentUser.id},uid_seller.eq.${currentUser.id}`);
 
         if (error) throw error;
 
-        const transactionsWithDetails = await Promise.all(
+        const transactionsWithDetails = await Promise.all( // Fetch details for each transaction
           (data || []).map(async (transaction) => {
             const { data: motoData } = await supabase
               .from("MOTORCYCLE")
@@ -250,7 +250,7 @@ const Transaction = () => {
 
     fetchTransactions();
 
-    const channel = supabase
+    const channel = supabase // Create a channel for real-time updates
       .channel("transaction-updates")
       .on(
         "postgres_changes",

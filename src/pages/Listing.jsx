@@ -238,7 +238,6 @@ const Listing = () => {
           <div className="text-center py-10">No listings found</div>
         ) : (
           filteredMotos
-            .filter((motoItem) => motoItem.is_sold === false)
             .map((motoItem) => (
               <div key={motoItem.id}>
                 <div className="hidden md:grid grid-cols-5 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md">
@@ -286,17 +285,17 @@ const Listing = () => {
                   <div className="flex flex-col justify-center items-start">
                     <div
                       className={`flex flex-row justify-center items-center p-[5px] gap-[5px] rounded-sm w-fit ${
-                        motoItem.completed
+                        motoItem.is_sold
                           ? "bg-[#C4FFAE] text-[#1B7200]"
                           : "bg-[#FFECAE] text-[#725C00]"
                       }`}
                     >
                       <img
-                        src={`${motoItem.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
+                        src={`${motoItem.is_sold ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
                         alt=""
                       />
                       <span className="font-light">
-                        {motoItem.completed ? "Sold" : "Selling"}
+                        {motoItem.is_sold ? "Sold" : "Selling"}
                       </span>
                     </div>
                   </div>
@@ -407,17 +406,17 @@ const Listing = () => {
                     <div className="flex flex-col justify-center items-start">
                       <div
                         className={`flex flex-row justify-center items-center p-[5px] gap-[5px] rounded-sm w-fit ${
-                          motoItem.completed
+                          motoItem.is_sold
                             ? "bg-[#C4FFAE] text-[#1B7200]"
                             : "bg-[#FFECAE] text-[#725C00]"
                         }`}
                       >
                         <img
-                          src={`${motoItem.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
+                          src={`${motoItem.is_sold ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
                           alt=""
                         />
                         <span className="font-bold">
-                          {motoItem.completed ? "Sold" : "Selling"}
+                          {motoItem.is_sold ? "Sold" : "Selling"}
                         </span>
                       </div>
                     </div>

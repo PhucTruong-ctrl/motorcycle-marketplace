@@ -1,37 +1,34 @@
-# RevNow - Motorcycle Marketplace
+# Motorcycle Marketplace
 
-RevNow is a full-stack web application for buying and selling new and used motorcycles. It provides real-time features, advanced filtering, and a secure transaction process, powered by React and Supabase.
+Web-based marketplace for buying and selling motorcycles. Features real-time chat, seller analytics dashboard, and secure transaction management.
 
 ## Features
 
-- User Authentication: Email/password and Google OAuth
-- Product Management: Create, edit, and manage motorcycle listings with multi-image uploads
-- Advanced Search and Filtering: Filter by brand, type, model, price, year, mileage
-- Real-time Chat: Integrated messaging for buyers and sellers
-- Transaction System: Purchase tracking and transaction history
-- User Profiles: Public profiles with listings and reputation
-- Seller Dashboard: Analytics with charts for sales performance
-- Responsive Design: Tailwind CSS for all screen sizes
+- User authentication with email and Google OAuth
+- Product listings with multi-image upload
+- Advanced search and filtering by brand, type, price, year, mileage
+- Real-time messaging between buyers and sellers
+- Transaction tracking and history
+- Seller dashboard with sales analytics and charts
+- Responsive design for all screen sizes
 
 ## Tech Stack
 
-- Frontend: React 19, Vite, Tailwind CSS 4, React Router
-- Backend: Supabase (PostgreSQL, Auth, Storage)
-- Libraries: TanStack Query, react-select, chart.js, Quill editor
+- **Frontend:** React 19, Vite, Tailwind CSS 4, React Router
+- **Backend:** Supabase (PostgreSQL, Auth, Storage, Realtime)
+- **Libraries:** TanStack Query, Chart.js, react-select, Quill editor
 
-## Getting Started
+## Requirements
 
-### Prerequisites
+- Node.js 18 or higher
+- Supabase account
 
-- Node.js 18 or later
-- npm, yarn, or pnpm
-
-### Installation
+## Installation
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/PhucTruong-ctrl/Motorcycles-Trading-Platform.git
-   cd Motorcycles-Trading-Platform
+   git clone https://github.com/PhucTruong-ctrl/motorcycle-marketplace.git
+   cd motorcycle-marketplace
    ```
 
 2. Install dependencies:
@@ -39,30 +36,40 @@ RevNow is a full-stack web application for buying and selling new and used motor
    npm install
    ```
 
-3. Set up environment variables:
-   Create a `.env` file in the project root:
+3. Create a `.env` file with your Supabase credentials:
    ```env
-   VITE_SUPABASE_URL=YOUR_SUPABASE_URL
-   VITE_SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_KEY=your_supabase_anon_key
    ```
 
-4. Run the development server:
+4. Start the development server:
    ```sh
    npm run dev
    ```
 
-   Access the application at `http://localhost:5173`
+Access at `http://localhost:5173`
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| VITE_SUPABASE_URL | Supabase project URL |
+| VITE_SUPABASE_KEY | Supabase anonymous key |
 
 ## Project Structure
 
 ```
 src/
-  components/    # Reusable UI components
-  pages/         # Page components
-  services/      # API and Supabase services
-  hooks/         # Custom React hooks
-  utils/         # Utility functions
+  components/    - Reusable UI components
+  pages/         - Page components
+  services/      - Supabase API services
+  hooks/         - Custom React hooks
+  utils/         - Utility functions
 ```
+
+## Contributing
+
+Contributions are welcome. Please open an issue to discuss changes before submitting a pull request.
 
 ## License
 
